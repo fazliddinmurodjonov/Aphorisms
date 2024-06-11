@@ -1,13 +1,14 @@
 package com.programmsoft.aphorisms
 
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.aphorisms.databinding.ActivityMainBinding
@@ -23,8 +24,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         SharedPreference.init(this)
         Functions.connectivityManager(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            installSplashScreen()
+        } else {
+            setTheme(R.style.Theme_Aphorisms)
+        }
+
         setContentView(R.layout.activity_main)
-        Functions.appearanceStatusNavigationBars(window, 0,
+        Functions.appearanceStatusNavigationBars(
+            window, 0,
             appearanceLightStatusBars = false,
             appearanceNavigationBars = false
         )
