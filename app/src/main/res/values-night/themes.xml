@@ -3,5 +3,13 @@
     <style name="Base.Theme.Aphorisms" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">@color/black_custom</item>
+        <item name="android:navigationBarColor">@color/black_custom</item>
+        <item name="android:windowBackground">@drawable/background_splash_day</item>
+    </style>
+    <style name="Theme.Aphorisms" parent="Base.Theme.Aphorisms" />
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/gray_custom</item>
     </style>
 </resources>
