@@ -8,6 +8,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:layout_gravity="center"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="15dp"
@@ -17,6 +18,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
         app:strokeColor="@color/white_50">
 
@@ -24,8 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black_custom"
+            android:orientation="horizontal"
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/info" />
 
             <TextView
                 android:id="@+id/tvName"
@@ -35,7 +46,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="15dp"
                 android:elevation="1dp"
-                android:text="@string/knowledge"
+                android:text="@string/about_app"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>

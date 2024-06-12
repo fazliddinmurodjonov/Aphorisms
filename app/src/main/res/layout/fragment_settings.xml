@@ -1,8 +1,46 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.programmsoft.fragments.SettingsFragment">
 
+    <TextView
+        android:id="@+id/tvSettings"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_gravity="center"
+        android:fontFamily="@font/roboto_slab_bold"
+        android:gravity="center|start"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="@string/settings"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
 
-</FrameLayout>
+    <include
+        android:id="@+id/cvInfo"
+        layout="@layout/item_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    <include
+        android:id="@+id/cvRate"
+        layout="@layout/item_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    <include
+        android:id="@+id/cvOtherApps"
+        layout="@layout/item_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    <include
+        android:id="@+id/cvShare"
+        layout="@layout/item_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+</LinearLayout>
