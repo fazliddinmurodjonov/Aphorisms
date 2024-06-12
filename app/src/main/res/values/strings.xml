@@ -12,4 +12,9 @@
     <string name="home">Uy</string>
     <string name="search">Izlash</string>
     <string name="try_again">Qaytadan urining</string>
+    <string name="about_us">Biz haqimizda</string>
+    <string name="version">Versiya: </string>
+    <string name="company">Kompaniya: Programm Soft MCHJ</string>
+    <string name="mail">Mail: programmsoftuz@gmail.com</string>
+    <string name="category">Bo‘lim</string>
 </resources>
