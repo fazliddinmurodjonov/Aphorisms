@@ -1,7 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.programmsoft.fragments.CategoryFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAphorism"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_aphorism" />
+
+    <ImageView
+        android:id="@+id/imgEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:src="@drawable/empty"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -12,4 +12,5 @@
     <color name="brown">#948979</color>
     <color name="brown_light">#948979</color>
     <color name="white_50">#80FFFFFF</color>
+    <color name="icon">#FFFFFF</color>
 </resources>
