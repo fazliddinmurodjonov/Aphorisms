@@ -9,4 +9,5 @@
     <color name="ripple_color">#80F5F5F5</color>
     <color name="nav_icon_bg">#80FFFFFF</color>
     <color name="splash_bg">#153448</color>
+    <color name="brown">#948979</color>
 </resources>
