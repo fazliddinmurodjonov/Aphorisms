@@ -1,11 +1,13 @@
 package com.programmsoft.room.dao
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.programmsoft.room.entity.Aphorism
 import io.reactivex.rxjava3.core.Flowable
 
+@Dao
 interface AphorismDao {
     @Insert
     fun insert(aphorism: Aphorism)
@@ -19,13 +21,13 @@ interface AphorismDao {
     @Query("select *from  Aphorism")
     fun getAllWithoutFlowable(): List<Aphorism>
 
-    @Query("select *from  Aphorism where id = :id")
+    @Query("select *from Aphorism where id = :id")
     fun getById(id: Int): Aphorism
 
-    @Query("SELECT *FROM  Aphorism WHERE news = :newAphorism")
+    @Query("SELECT *FROM Aphorism WHERE news = :newAphorism")
     fun getAllNews(newAphorism: Int): Flowable<List<Aphorism>>
 
-    @Query("select *from  Aphorism where categoryId = :categoryId")
+    @Query("select *from Aphorism where categoryId = :categoryId")
     fun getAllByCategories(categoryId: Int): Flowable<List<Aphorism>>
 
     @Query("select *from Aphorism where bookmark = :bookmark")

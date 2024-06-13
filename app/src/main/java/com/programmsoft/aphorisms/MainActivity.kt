@@ -1,9 +1,12 @@
 package com.programmsoft.aphorisms
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,8 +16,11 @@ import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.aphorisms.databinding.ActivityMainBinding
 import com.programmsoft.utils.Functions
+import com.programmsoft.utils.Functions.fragmentList
 import com.programmsoft.utils.SharedPreference
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by viewBinding()
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -29,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             setTheme(R.style.Theme_Aphorisms)
         }
-
         setContentView(R.layout.activity_main)
         Functions.appearanceStatusNavigationBars(
             window, 0,
@@ -48,28 +53,31 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = binding.btnNav
         bottomNavigationView.itemIconTintList = null
         appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home,
-                R.id.nav_menu,
-                R.id.nav_bookmark,
-                R.id.nav_settings,
-            )
+            fragmentList
         )
         binding.btnNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-
+            binding.btnNav.isVisible =
+                destination.id !in Functions.destinationsWithoutBottomNav
         }
     }
 
     private fun isAppFirstRun() {
-//        if (SharedPreference.isAppFirstOpen != 1) {
-//            Functions.insertCategories()
-//            SharedPreference.isAppFirstOpen = 1
-//        }
+        if (SharedPreference.isAppFirstOpen != 1) {
+            Functions.insertCategories()
+            SharedPreference.isAppFirstOpen = 1
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        val newOverride = Configuration(newBase?.resources?.configuration)
+        newOverride.fontScale = 1.0f
+        applyOverrideConfiguration(newOverride)
+        super.attachBaseContext(newBase)
     }
 }

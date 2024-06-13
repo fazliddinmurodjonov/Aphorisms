@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/fragment_search" />
     </fragment>
     <fragment
         android:id="@+id/nav_menu"
@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_menu" >
         <action
             android:id="@+id/action_nav_menu_to_categoryFragment"
-            app:destination="@id/categoryFragment" />
+            app:destination="@id/fragment_category" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
@@ -34,12 +34,12 @@
         android:label="fragment_news"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/categoryFragment"
+        android:id="@+id/fragment_category"
         android:name="com.programmsoft.fragments.CategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_category" />
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/fragment_search"
         android:name="com.programmsoft.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />

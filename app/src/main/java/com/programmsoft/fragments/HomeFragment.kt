@@ -3,58 +3,109 @@ package com.programmsoft.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.programmsoft.adapters.AphorismsAdapter
+import com.programmsoft.adapters.LoadMoreAdapter
 import com.programmsoft.aphorisms.R
+import com.programmsoft.aphorisms.databinding.FragmentHomeBinding
+import com.programmsoft.utils.ConnectivityManagers
+import com.programmsoft.utils.Functions
+import com.programmsoft.utils.SharedPreference
+import com.programmsoft.viewmodels.AphorismsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+@AndroidEntryPoint
+class HomeFragment : Fragment(R.layout.fragment_home) {
+    private lateinit var binding: FragmentHomeBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    @Inject
+    lateinit var aphorismsAdapter: AphorismsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val viewModel: AphorismsViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        SharedPreference.init(requireActivity())
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.aphorismList.collect { facts ->
+                    aphorismsAdapter.submitData(facts)
                 }
             }
+        }
+        aphorismsAdapter.setOnItemClickListener {
+            Functions.showDialogWithArgument(requireActivity().supportFragmentManager, it)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                aphorismsAdapter.loadStateFlow.collect {
+                    val state = it.refresh
+                    binding.progressBar.isVisible = state is LoadState.Loading
+                }
+            }
+        }
+        if (!ConnectivityManagers.isNetworkAvailable) {
+            binding.retryLayout.root.visibility = View.VISIBLE
+        }
+
+        binding.retryLayout.retryBtn.setOnClickListener {
+            if (ConnectivityManagers.isNetworkAvailable) {
+                binding.retryLayout.root.visibility = View.INVISIBLE
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.factsListRetry.collect { facts ->
+                        aphorismsAdapter.submitData(facts)
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        binding.actionBar.cvSearch.setOnClickListener {
+            findNavController().navigate(R.id.fragment_search)
+        }
+        binding.rvAphorism.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = aphorismsAdapter
+        }
+
+        binding.rvAphorism.adapter = aphorismsAdapter.withLoadStateFooter(
+            LoadMoreAdapter {
+                aphorismsAdapter.retry()
+            }
+        )
+
     }
+
+
 }

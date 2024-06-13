@@ -6,6 +6,9 @@
         <item name="android:statusBarColor">@color/black_custom</item>
         <item name="android:navigationBarColor">@color/black_custom</item>
         <item name="android:windowBackground">@drawable/background_splash_day</item>
+        <item name="colorAccent">@color/ripple_color</item>
+        <item name="android:textColorHighlight">@color/ripple_color</item>
+        <item name="android:colorControlActivated">@color/white</item>
     </style>
     <style name="Theme.Aphorisms" parent="Base.Theme.Aphorisms" />
 
