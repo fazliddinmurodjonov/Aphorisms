@@ -144,6 +144,7 @@ object Functions {
         val shareIntent = Intent.createChooser(intent, null)
         context.startActivity(shareIntent)
     }
+
     fun sendData(context: Context, data: String) {
         val sendIntent = Intent(Intent.ACTION_VIEW)
         sendIntent.putExtra("sms_body", data)
@@ -165,12 +166,6 @@ object Functions {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip: ClipData = ClipData.newPlainText("label", data)
         clipboard.setPrimaryClip(clip)
-        val toastLayout: SnackbarLayoutBinding =
-            SnackbarLayoutBinding.inflate(LayoutInflater.from(App.instance), null, false)
-        val toast = Toast(App.instance)
-        toast.duration = Toast.LENGTH_SHORT
-        toast.view = toastLayout.root
-        toast.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
-        toast.show()
+        Toast.makeText(context, "Nusxa olindi.", Toast.LENGTH_SHORT).show()
     }
 }

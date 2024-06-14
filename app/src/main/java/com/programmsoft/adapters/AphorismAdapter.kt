@@ -2,6 +2,7 @@ package com.programmsoft.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
@@ -16,6 +17,7 @@ import com.programmsoft.room.entity.Aphorism
 
 class AphorismAdapter : ListAdapter<Aphorism, AphorismAdapter.ViewHolder>(MyDiffUtil()) {
     lateinit var itemClick: OnItemClickListener
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
 
     fun interface OnItemClickListener {
         fun onClick(id: Long)
@@ -32,8 +34,14 @@ class AphorismAdapter : ListAdapter<Aphorism, AphorismAdapter.ViewHolder>(MyDiff
             binding.logo.isVisible = aphorism.news == 1
             binding.root.animation = AnimationUtils.loadAnimation(App.instance, R.anim.item_anim)
             binding.cvAphorism.setOnClickListener {
-
+                val previousPosition = selectedPosition
+                selectedPosition = bindingAdapterPosition
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
                 itemClick.onClick(aphorism.aphorismId)
+            }
+            if (bindingAdapterPosition == selectedPosition) {
+                binding.logo.visibility = View.INVISIBLE
             }
         }
     }
