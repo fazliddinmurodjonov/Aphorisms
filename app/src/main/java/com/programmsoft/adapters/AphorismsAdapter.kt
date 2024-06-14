@@ -1,7 +1,9 @@
 package com.programmsoft.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
@@ -18,6 +20,7 @@ class AphorismsAdapter @Inject constructor() :
     PagingDataAdapter<AphorismItemResponse, AphorismsAdapter.ViewHolder>(differCallback) {
     lateinit var itemClick: OnItemClickListener
     private lateinit var context: Context
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
 
     fun interface OnItemClickListener {
         fun onClick(id: Long)
@@ -37,7 +40,14 @@ class AphorismsAdapter @Inject constructor() :
             }
             binding.root.animation = AnimationUtils.loadAnimation(App.instance, R.anim.item_anim)
             binding.cvAphorism.setOnClickListener {
+                val previousPosition = selectedPosition
+                selectedPosition = bindingAdapterPosition
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
                 itemClick.onClick(aphorism.id)
+            }
+            if (bindingAdapterPosition == selectedPosition) {
+                binding.logo.visibility = View.INVISIBLE
             }
         }
     }

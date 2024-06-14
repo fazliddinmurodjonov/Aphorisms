@@ -9,12 +9,12 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.adapters.AphorismAdapter
 import com.programmsoft.aphorisms.R
-import com.programmsoft.aphorisms.databinding.FragmentSearchBinding
+import com.programmsoft.aphorisms.databinding.FragmentSearchingBinding
 import com.programmsoft.room.entity.Aphorism
 import com.programmsoft.utils.Functions
 
-class SearchFragment : Fragment(R.layout.fragment_search) {
-    private val binding: FragmentSearchBinding by viewBinding()
+class SearchingFragment : Fragment(R.layout.fragment_searching) {
+    private val binding: FragmentSearchingBinding by viewBinding()
     private val aphorismAdapter = AphorismAdapter()
     val list = Functions.db.aphorismDao().getAllAphorisms()
 

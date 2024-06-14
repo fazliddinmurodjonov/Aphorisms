@@ -32,6 +32,7 @@ class AphorismAdapter : ListAdapter<Aphorism, AphorismAdapter.ViewHolder>(MyDiff
             binding.logo.isVisible = aphorism.news == 1
             binding.root.animation = AnimationUtils.loadAnimation(App.instance, R.anim.item_anim)
             binding.cvAphorism.setOnClickListener {
+
                 itemClick.onClick(aphorism.aphorismId)
             }
         }

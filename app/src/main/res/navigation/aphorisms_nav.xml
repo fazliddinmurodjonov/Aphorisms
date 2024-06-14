@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/fragment_search"
-        android:name="com.programmsoft.fragments.SearchFragment"
+        android:name="com.programmsoft.fragments.SearchingFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_searching" />
 </navigation>

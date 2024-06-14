@@ -60,6 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
         aphorismsAdapter.setOnItemClickListener {
+            Functions.db.aphorismDao().updateNew(it)
             Functions.showDialogWithArgument(requireActivity().supportFragmentManager, it)
         }
 

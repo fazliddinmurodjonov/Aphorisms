@@ -1,16 +1,24 @@
 package com.programmsoft.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
 import com.programmsoft.aphorisms.App
 import com.programmsoft.aphorisms.R
+import com.programmsoft.aphorisms.databinding.SnackbarLayoutBinding
 import com.programmsoft.fragments.DialogFragment
 import com.programmsoft.models.AphorismItemResponse
 import com.programmsoft.room.database.AphorismDB
@@ -102,5 +110,67 @@ object Functions {
         val id = bundleOf("aphorism_id" to factId)
         dialog.arguments = id
         dialog.show(fragmentManager, "aphorism")
+    }
+
+    fun showDialog(fragmentManager: FragmentManager, tag: String) {
+        val dialog = DialogFragment()
+        dialog.show(fragmentManager, tag)
+    }
+
+    fun rateApp(context: Context) {
+        val playStoreUrl = "https://play.google.com/store/apps/details?id=" + context.packageName
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+        context.startActivity(browserIntent)
+    }
+
+    fun otherApps(context: Context) {
+        val url = context.resources.getString(R.string.google_play)
+        val uriUrl: Uri = Uri.parse(url)
+        val launchBrowser = Intent(Intent.ACTION_VIEW, uriUrl)
+        context.startActivity(launchBrowser)
+    }
+
+    fun shareApp(context: Context) {
+        val intent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT, "Aforizmlar" +
+                        "\n" +
+                        "\uD83D\uDC47Dasturni yuklab olish\uD83D\uDC47\n" +
+                        "https://play.google.com/store/apps/details?id=com.programmsoft.aphorisms"
+            )
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(intent, null)
+        context.startActivity(shareIntent)
+    }
+    fun sendData(context: Context, data: String) {
+        val sendIntent = Intent(Intent.ACTION_VIEW)
+        sendIntent.putExtra("sms_body", data)
+        sendIntent.type = "vnd.android-dir/mms-sms"
+        context.startActivity(sendIntent)
+    }
+
+    fun shareData(context: Context, data: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, data)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+    }
+
+    fun copyData(context: Context, data: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("label", data)
+        clipboard.setPrimaryClip(clip)
+        val toastLayout: SnackbarLayoutBinding =
+            SnackbarLayoutBinding.inflate(LayoutInflater.from(App.instance), null, false)
+        val toast = Toast(App.instance)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = toastLayout.root
+        toast.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
+        toast.show()
     }
 }

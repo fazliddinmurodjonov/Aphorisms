@@ -40,7 +40,7 @@ interface AphorismDao {
     fun isAphorismExist(aphorismId: Long): Int
 
     @Query("UPDATE Aphorism SET bookmark = :bookmark WHERE aphorismId = :aphorismId")
-    fun updateFavourite(aphorismId: Long, bookmark: Int)
+    fun updateBookmark(aphorismId: Long, bookmark: Int)
 
     @Query("UPDATE Aphorism SET news = 0 WHERE aphorismId = :aphorismId")
     fun updateNew(aphorismId: Long)
