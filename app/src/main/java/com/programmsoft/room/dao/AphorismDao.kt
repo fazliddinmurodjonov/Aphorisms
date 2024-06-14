@@ -19,10 +19,10 @@ interface AphorismDao {
     fun getAll(): Flowable<List<Aphorism>>
 
     @Query("select *from  Aphorism")
-    fun getAllWithoutFlowable(): List<Aphorism>
+    fun getAllAphorisms(): List<Aphorism>
 
     @Query("select *from Aphorism where id = :id")
-    fun getById(id: Int): Aphorism
+    fun getById(id: Long): Aphorism
 
     @Query("SELECT *FROM Aphorism WHERE news = :newAphorism")
     fun getAllNews(newAphorism: Int): Flowable<List<Aphorism>>
@@ -31,10 +31,10 @@ interface AphorismDao {
     fun getAllByCategories(categoryId: Int): Flowable<List<Aphorism>>
 
     @Query("select *from Aphorism where bookmark = :bookmark")
-    fun getAllByFavourite(bookmark: Int): Flowable<List<Aphorism>>
+    fun getAllByBookmark(bookmark: Int): Flowable<List<Aphorism>>
 
     @Query("SELECT COUNT(*) FROM Aphorism WHERE bookmark = 1")
-    fun getAllFavourite(): Int
+    fun getAllBookmark(): Int
 
     @Query("SELECT COUNT(*) FROM Aphorism WHERE aphorismId = :aphorismId")
     fun isAphorismExist(aphorismId: Long): Int

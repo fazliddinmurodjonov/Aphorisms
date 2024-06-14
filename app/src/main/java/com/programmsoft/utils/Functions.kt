@@ -28,16 +28,16 @@ object Functions {
         R.id.fragment_category
     )
     val destinationsWithoutBottomNav =
-        listOf(R.id.nav_settings, R.id.fragment_search, R.id.fragment_category)
-    private val categoryList = listOf(
+        listOf(R.id.fragment_search, R.id.fragment_category)
+    private val categoryUzbList = listOf(
         "Aql"
     )
-    val categoryEngList = listOf(
+    private val categoryEngList = listOf(
         "intelligence"
     )
 
     fun insertCategories() {
-        categoryList.zip(categoryEngList).forEach { (categoryUzb, categoryEng) ->
+        categoryUzbList.zip(categoryEngList).forEach { (categoryUzb, categoryEng) ->
             val categories = AphorismCategory(nameEng = categoryEng, nameUzb = categoryUzb)
             db.aphorismCategoryDao().insert(categories)
         }
@@ -89,7 +89,7 @@ object Functions {
         if (existAphorism == 0) {
             val aphorism = Aphorism()
             aphorism.aphorismId = aphorismResponse.id
-            aphorism.categoryId = categoryList.indexOf(aphorismResponse.caption) + 1
+            aphorism.categoryId = categoryUzbList.indexOf(aphorismResponse.caption) + 1
             aphorism.news = aphorismResponse.isNew
             aphorism.text = aphorismResponse.text
             aphorism.bookmark = 0

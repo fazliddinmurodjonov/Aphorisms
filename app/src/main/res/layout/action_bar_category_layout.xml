@@ -30,7 +30,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/tvCategoryName"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
