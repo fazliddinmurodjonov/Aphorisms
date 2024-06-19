@@ -1,12 +1,20 @@
 package com.programmsoft.fragments
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,10 +28,14 @@ import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.FragmentHomeBinding
 import com.programmsoft.utils.ConnectivityManagers
 import com.programmsoft.utils.Functions
+import com.programmsoft.utils.Functions.getDate
+import com.programmsoft.utils.Functions.getDateAddedDay
+import com.programmsoft.utils.Functions.getDateInMilliseconds
 import com.programmsoft.utils.SharedPreference
 import com.programmsoft.viewmodels.AphorismsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,8 +57,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         SharedPreference.init(requireActivity())
+        permissionOfNotification(requireContext())
+        Functions.setTimeOfAlarmManager(requireContext())
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.aphorismList.collect { facts ->
@@ -100,6 +115,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         )
     }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun permissionOfNotification(context: Context) {
+        when {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                //   Functions.appNotifications(requireContext())
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission())
+        { isGrandted ->
+            Boolean
+        }
 
 
 }

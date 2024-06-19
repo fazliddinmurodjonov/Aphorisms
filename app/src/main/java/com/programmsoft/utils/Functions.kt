@@ -1,32 +1,59 @@
 package com.programmsoft.utils
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.media.AudioAttributes
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavDeepLinkBuilder
 import com.programmsoft.aphorisms.App
+import com.programmsoft.aphorisms.MainActivity
 import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.SnackbarLayoutBinding
+import com.programmsoft.broadcasts.NotificationReceivers
 import com.programmsoft.fragments.DialogFragment
 import com.programmsoft.models.AphorismItemResponse
 import com.programmsoft.room.database.AphorismDB
 import com.programmsoft.room.entity.Aphorism
 import com.programmsoft.room.entity.AphorismCategory
+import java.security.Permissions
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object Functions {
     val db = AphorismDB.getInstance(App.instance)
+    const val NOTIFICATION_CHANNEL = "Aphorisms"
+    const val NOTIFICATION_ID = 100
     val fragmentList = setOf(
         R.id.nav_home,
         R.id.nav_menu,
@@ -168,4 +195,119 @@ object Functions {
         clipboard.setPrimaryClip(clip)
         Toast.makeText(context, "Nusxa olindi.", Toast.LENGTH_SHORT).show()
     }
+
+
+    @SuppressLint("InlinedApi")
+    fun appNotifications(context: Context) {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
+    }
+
+    fun isAllowNotifications(context: Context): Boolean {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return notificationManager.areNotificationsEnabled()
+    }
+
+    fun showNotification(context: Context) {
+        val title = ""
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("from_notification", true)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val bundle = Bundle().apply {
+            putBoolean("from_notification", true)
+        }
+        val deepLink = NavDeepLinkBuilder(context).setGraph(R.navigation.aphorisms_nav)
+            .setComponentName(MainActivity::class.java).setDestination(R.id.nav_home)
+            .setArguments(bundle).createPendingIntent()
+        val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
+            .setColor(ContextCompat.getColor(context, R.color.black_custom))
+            .setSmallIcon(R.drawable.notification_logo)
+            .setContentTitle(title)
+            .setContentIntent(deepLink)
+            .setContentText("context.resources.getString(R.string.about_app)")
+            .setPriority(NotificationCompat.PRIORITY_HIGH).setChannelId(NOTIFICATION_CHANNEL)
+            .setAutoCancel(true)
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    fun setTimeOfAlarmManager(context: Context) {
+        if (System.currentTimeMillis() > getDateInMilliseconds(getDate())) {
+            setAlarmManager(
+                1, context, getDateInMilliseconds(getDateAddedDay(1))
+            )
+        } else {
+            setAlarmManager(
+                1, context, getDateInMilliseconds(getDate())
+            )
+        }
+
+    }
+
+    fun setAlarmManager(requestCode: Int, context: Context, time: Long) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = createPendingIntent(context, requestCode)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+    }
+
+    private fun createPendingIntent(context: Context, requestCode: Int): PendingIntent {
+        val intent = Intent(context, NotificationReceivers::class.java)
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+        intent.putExtra("request_code", requestCode)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    }
+
+    fun createNotificationChannel(context: Context) {
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        notificationManager ?: return
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val id = NOTIFICATION_CHANNEL
+        val name = NOTIFICATION_CHANNEL
+        val channel = NotificationChannel(id, name, importance)
+        channel.enableLights(true)
+        channel.lightColor = Color.BLUE
+        channel.enableVibration(true)
+        channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    fun getDateInMilliseconds(date: String): Long {
+        val updatedDateTimeString = "08:00 $date"
+        val format = SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.ENGLISH)
+        val d = format.parse(updatedDateTimeString)
+        Log.d("getDateInMilliseconds", "getDateInMilliseconds: ${d.time}")
+
+        return d?.time ?: 0
+    }
+
+    fun getDate(): String {
+        val currentDate = Date()
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        return dateFormat.format(currentDate)
+    }
+
+    fun getDateAddedDay(addDay: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, addDay)
+        val nextDate = calendar.time
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        return dateFormat.format(nextDate)
+    }
+
+
 }

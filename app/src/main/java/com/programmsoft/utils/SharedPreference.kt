@@ -43,4 +43,16 @@ object SharedPreference {
         set(value) = sharedPreference.edit {
             it.putInt("isAppFirstOpen", value!!)
         }
+
+    var isAllowNotification: Boolean
+        get() = sharedPreference.getBoolean("isAllowNotification", false)
+        set(value) = sharedPreference.edit {
+            it.putBoolean("isAllowNotification", value)
+        }
+
+    var permissionNotification: Int?
+        get() = sharedPreference.getInt("permissionNotification",0)
+        set(value) = sharedPreference.edit {
+            it.putInt("permissionNotification", value!!)
+        }
 }

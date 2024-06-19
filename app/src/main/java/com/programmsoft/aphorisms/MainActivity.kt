@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.aphorisms.databinding.ActivityMainBinding
 import com.programmsoft.utils.Functions
+import com.programmsoft.utils.Functions.createNotificationChannel
 import com.programmsoft.utils.Functions.fragmentList
 import com.programmsoft.utils.SharedPreference
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreference.init(this)
+        SharedPreference.isAllowNotification = Functions.isAllowNotifications(this)
         Functions.connectivityManager(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             installSplashScreen()
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun isAppFirstRun() {
         if (SharedPreference.isAppFirstOpen != 1) {
             Functions.insertCategories()
+            createNotificationChannel(this)
             SharedPreference.isAppFirstOpen = 1
         }
     }
@@ -79,5 +82,10 @@ class MainActivity : AppCompatActivity() {
         newOverride.fontScale = 1.0f
         applyOverrideConfiguration(newOverride)
         super.attachBaseContext(newBase)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        SharedPreference.isAllowNotification = Functions.isAllowNotifications(this)
     }
 }
