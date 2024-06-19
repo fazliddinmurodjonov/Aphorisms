@@ -1,7 +1,6 @@
 package com.programmsoft.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import com.programmsoft.aphorisms.App
 import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.ItemAphorismBinding
 import com.programmsoft.models.AphorismItemResponse
+import com.programmsoft.utils.Functions
 import javax.inject.Inject
 
 class AphorismsAdapter @Inject constructor() :
@@ -35,15 +35,14 @@ class AphorismsAdapter @Inject constructor() :
         fun onBind(aphorism: AphorismItemResponse) {
             binding.tvAphorism.text = aphorism.text
             @Suppress("SENSELESS_COMPARISON")
-            if (aphorism.isNew == null) {
-                binding.logo.isVisible = true
-            }
+            binding.logo.isVisible = Functions.db.aphorismDao().getAphorismNewById(aphorism.id) == 1
+
             binding.root.animation = AnimationUtils.loadAnimation(App.instance, R.anim.item_anim)
             binding.cvAphorism.setOnClickListener {
                 val previousPosition = selectedPosition
                 selectedPosition = bindingAdapterPosition
-                notifyItemChanged(previousPosition)
-                notifyItemChanged(selectedPosition)
+//                notifyItemChanged(previousPosition)
+//                notifyItemChanged(selectedPosition)
                 itemClick.onClick(aphorism.id)
             }
             if (bindingAdapterPosition == selectedPosition) {

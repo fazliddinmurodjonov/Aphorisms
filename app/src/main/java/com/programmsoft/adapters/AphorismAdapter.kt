@@ -13,6 +13,7 @@ import com.programmsoft.aphorisms.App
 import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.ItemAphorismBinding
 import com.programmsoft.room.entity.Aphorism
+import com.programmsoft.utils.Functions
 
 
 class AphorismAdapter : ListAdapter<Aphorism, AphorismAdapter.ViewHolder>(MyDiffUtil()) {
@@ -36,7 +37,7 @@ class AphorismAdapter : ListAdapter<Aphorism, AphorismAdapter.ViewHolder>(MyDiff
             binding.cvAphorism.setOnClickListener {
                 val previousPosition = selectedPosition
                 selectedPosition = bindingAdapterPosition
-                notifyItemChanged(previousPosition)
+            //  notifyItemChanged(previousPosition)
                 notifyItemChanged(selectedPosition)
                 itemClick.onClick(aphorism.aphorismId)
             }

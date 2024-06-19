@@ -3,14 +3,9 @@ package com.programmsoft.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -99,13 +94,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = aphorismsAdapter
         }
-
         binding.rvAphorism.adapter = aphorismsAdapter.withLoadStateFooter(
             LoadMoreAdapter {
                 aphorismsAdapter.retry()
             }
         )
-
     }
 
 

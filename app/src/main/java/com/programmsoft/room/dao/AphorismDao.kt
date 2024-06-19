@@ -50,4 +50,7 @@ interface AphorismDao {
 
     @Query("select aphorismId from  Aphorism where id = :id")
     fun getAphorismIdById(id: Long): Long
+
+    @Query("select news from  Aphorism where aphorismId = :aphorismId")
+    fun getAphorismNewById(aphorismId: Long): Int
 }

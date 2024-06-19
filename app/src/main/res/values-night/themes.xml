@@ -9,7 +9,12 @@
         <item name="colorAccent">@color/ripple_color</item>
         <item name="android:textColorHighlight">@color/ripple_color</item>
         <item name="android:colorControlActivated">@color/white</item>
+        <item name="colorOnSurface">@color/white_50</item>
+        <item name="colorSecondary">@color/white_50</item>
+        <item name="colorPrimary">@color/white_50</item>
+        <item name="colorPrimaryDark">@color/white_50</item>
     </style>
+
     <style name="Theme.Aphorisms" parent="Base.Theme.Aphorisms" />
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">

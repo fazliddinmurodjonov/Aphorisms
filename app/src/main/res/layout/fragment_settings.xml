@@ -17,7 +17,12 @@
         android:text="@string/settings"
         android:textColor="@color/white"
         android:textSize="22sp" />
-
+    <include
+        android:id="@+id/cvNotification"
+        layout="@layout/item_settings_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
     <include
         android:id="@+id/cvInfo"
         layout="@layout/item_settings"

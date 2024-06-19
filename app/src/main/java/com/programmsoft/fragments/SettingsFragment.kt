@@ -1,12 +1,14 @@
 package com.programmsoft.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.FragmentSettingsBinding
 import com.programmsoft.utils.Functions
+
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private val binding: FragmentSettingsBinding by viewBinding()
@@ -25,6 +27,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         binding.cvRate.icon.setImageResource(R.drawable.rate)
         binding.cvOtherApps.icon.setImageResource(R.drawable.other_apps)
         binding.cvShare.icon.setImageResource(R.drawable.share)
+
+
+        binding.cvNotification.switchNotification.setTrackResource(R.drawable.track)
+        binding.cvNotification.switchNotification.setThumbResource(R.drawable.thumb)
+        binding.cvNotification.switchNotification.outlineAmbientShadowColor=ContextCompat.getColor(requireContext(),R.color.red_custom)
     }
 
     private fun clicks() {
