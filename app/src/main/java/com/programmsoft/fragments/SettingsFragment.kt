@@ -14,6 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.programmsoft.aphorisms.R
 import com.programmsoft.aphorisms.databinding.FragmentSettingsBinding
 import com.programmsoft.utils.Functions
+import com.programmsoft.utils.Functions.appNotifications
 import com.programmsoft.utils.Functions.isAllowNotifications
 import com.programmsoft.utils.SharedPreference
 
@@ -50,10 +51,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     binding.cvNotification.switchNotification.isChecked = false
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         permissionOfNotification(requireContext())
+                    } else {
+                        appNotifications(requireContext())
                     }
                 }
             } else {
-                SharedPreference.isAllowNotification = false
+                //  SharedPreference.isAllowNotification = false
+                Functions.appNotifications(requireContext())
             }
         }
     }
@@ -80,10 +84,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED -> {
+                binding.cvNotification.switchNotification.isChecked = true
+                SharedPreference.isAllowNotification = true
             }
 
             shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                  Functions.appNotifications(requireContext())
+                Functions.appNotifications(requireContext())
             }
 
             else -> {
@@ -97,4 +103,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         { isGrandted ->
             Boolean
         }
+
+    override fun onResume() {
+        super.onResume()
+        binding.cvNotification.switchNotification.isChecked = isAllowNotifications(requireContext())
+    }
 }
