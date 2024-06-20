@@ -37,6 +37,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:src="@drawable/empty"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </LinearLayout>

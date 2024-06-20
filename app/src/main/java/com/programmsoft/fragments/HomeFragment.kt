@@ -61,7 +61,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         SharedPreference.init(requireActivity())
         permissionOfNotification(requireContext())
-        Functions.setTimeOfAlarmManager(requireContext())
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.aphorismList.collect { facts ->

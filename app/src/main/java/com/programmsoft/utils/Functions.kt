@@ -1,6 +1,5 @@
 package com.programmsoft.utils
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -10,22 +9,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.media.AudioAttributes
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -212,8 +204,8 @@ object Functions {
         return notificationManager.areNotificationsEnabled()
     }
 
-    fun showNotification(context: Context) {
-        val title = ""
+    fun showNotification(context: Context, aphorismId: Long) {
+        val text = db.aphorismDao().getAphorismTextById(aphorismId)
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         val intent = Intent(context, MainActivity::class.java)
         intent.putExtra("from_notification", true)
@@ -227,9 +219,10 @@ object Functions {
         val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setColor(ContextCompat.getColor(context, R.color.black_custom))
             .setSmallIcon(R.drawable.notification_logo)
-            .setContentTitle(title)
+            .setContentTitle(context.resources.getString(R.string.app_name))
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(deepLink)
-            .setContentText("context.resources.getString(R.string.about_app)")
             .setPriority(NotificationCompat.PRIORITY_HIGH).setChannelId(NOTIFICATION_CHANNEL)
             .setAutoCancel(true)
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
@@ -248,7 +241,7 @@ object Functions {
 
     }
 
-    fun setAlarmManager(requestCode: Int, context: Context, time: Long) {
+    private fun setAlarmManager(requestCode: Int, context: Context, time: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = createPendingIntent(context, requestCode)
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent)
@@ -287,11 +280,9 @@ object Functions {
     }
 
     fun getDateInMilliseconds(date: String): Long {
-        val updatedDateTimeString = "08:00 $date"
+        val updatedDateTimeString = "11:25 $date"
         val format = SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.ENGLISH)
         val d = format.parse(updatedDateTimeString)
-        Log.d("getDateInMilliseconds", "getDateInMilliseconds: ${d.time}")
-
         return d?.time ?: 0
     }
 

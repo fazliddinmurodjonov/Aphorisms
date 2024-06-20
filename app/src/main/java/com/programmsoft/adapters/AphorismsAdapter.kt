@@ -42,7 +42,7 @@ class AphorismsAdapter @Inject constructor() :
                 val previousPosition = selectedPosition
                 selectedPosition = bindingAdapterPosition
 //                notifyItemChanged(previousPosition)
-//                notifyItemChanged(selectedPosition)
+                notifyItemChanged(selectedPosition)
                 itemClick.onClick(aphorism.id)
             }
             if (bindingAdapterPosition == selectedPosition) {

@@ -50,9 +50,15 @@ object SharedPreference {
             it.putBoolean("isAllowNotification", value)
         }
 
-    var permissionNotification: Int?
+    var permissionNotification: Int
         get() = sharedPreference.getInt("permissionNotification",0)
         set(value) = sharedPreference.edit {
-            it.putInt("permissionNotification", value!!)
+            it.putInt("permissionNotification", value)
+        }
+
+    var lastAphorismId: Long
+        get() = sharedPreference.getLong("lastAphorismId",1)
+        set(value) = sharedPreference.edit {
+            it.putLong("lastAphorismId", value)
         }
 }

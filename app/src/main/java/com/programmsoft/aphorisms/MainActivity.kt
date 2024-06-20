@@ -68,7 +68,9 @@ class MainActivity : AppCompatActivity() {
         if (SharedPreference.isAppFirstOpen != 1) {
             Functions.insertCategories()
             createNotificationChannel(this)
+            Functions.setTimeOfAlarmManager(this)
             SharedPreference.isAppFirstOpen = 1
+
         }
     }
 

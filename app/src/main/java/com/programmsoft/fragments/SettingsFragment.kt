@@ -1,8 +1,13 @@
 package com.programmsoft.fragments
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -40,9 +45,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             if (b) {
                 if (isAllowNotifications(requireContext())) {
                     SharedPreference.isAllowNotification = true
+                    Functions.setTimeOfAlarmManager(requireContext())
                 } else {
                     binding.cvNotification.switchNotification.isChecked = false
-                    Functions.appNotifications(requireContext())
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionOfNotification(requireContext())
+                    }
                 }
             } else {
                 SharedPreference.isAllowNotification = false
@@ -65,4 +73,28 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun permissionOfNotification(context: Context) {
+        when {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                  Functions.appNotifications(requireContext())
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission())
+        { isGrandted ->
+            Boolean
+        }
 }

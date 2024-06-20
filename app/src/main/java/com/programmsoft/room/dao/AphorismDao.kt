@@ -24,6 +24,9 @@ interface AphorismDao {
     @Query("select *from Aphorism where id = :id")
     fun getById(id: Long): Aphorism
 
+    @Query("select text from Aphorism where id = :id")
+    fun getAphorismTextById(id: Long): String
+
     @Query("SELECT *FROM Aphorism WHERE news = :newAphorism")
     fun getAllNews(newAphorism: Int): Flowable<List<Aphorism>>
 
@@ -38,6 +41,9 @@ interface AphorismDao {
 
     @Query("SELECT COUNT(*) FROM Aphorism WHERE aphorismId = :aphorismId")
     fun isAphorismExist(aphorismId: Long): Int
+
+    @Query("SELECT COUNT(*) FROM Aphorism WHERE id = :id")
+    fun isAphorismExistById(id: Long): Int
 
     @Query("UPDATE Aphorism SET bookmark = :bookmark WHERE aphorismId = :aphorismId")
     fun updateBookmark(aphorismId: Long, bookmark: Int)
