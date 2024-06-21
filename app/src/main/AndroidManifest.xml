@@ -27,6 +27,7 @@
         android:theme="@style/Theme.Aphorisms"
         android:usesCleartextTraffic="true"
         tools:targetApi="34">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -36,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name="com.programmsoft.broadcasts.NotificationReceivers"
             android:enabled="true"

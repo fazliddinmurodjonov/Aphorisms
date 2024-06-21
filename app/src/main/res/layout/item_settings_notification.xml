@@ -47,17 +47,18 @@
                 android:gravity="center|start"
                 android:text="@string/notification"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switchNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
                 android:shadowColor="@color/red_custom"
                 android:thumb="@drawable/thumb"
                 android:track="@drawable/track" />

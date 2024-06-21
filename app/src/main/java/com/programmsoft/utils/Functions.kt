@@ -280,7 +280,7 @@ object Functions {
     }
 
     fun getDateInMilliseconds(date: String): Long {
-        val updatedDateTimeString = "11:25 $date"
+        val updatedDateTimeString = "09:25 $date"
         val format = SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.ENGLISH)
         val d = format.parse(updatedDateTimeString)
         return d?.time ?: 0
